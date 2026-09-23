@@ -1,0 +1,134 @@
+<mxfile host="Electron" agent="Codex">
+  <diagram id="zerith-h1-hil-v2" name="Zerith H1 Pro HIL RL">
+    <mxGraphModel dx="1600" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#202938;fontFamily=Arial;spacingLeft=0;" value="&lt;font style=&quot;font-size:26px&quot;&gt;Zerith H1 Pro 真机人在环强化学习架构&lt;/font&gt;&lt;br&gt;&lt;font style=&quot;font-size:13px;color:#5B667A&quot;&gt;RLinf 负责 env / rollout / reward / replay / learner；ZERITH/OpenPI Policy Adapter 负责 DataConfig / transforms / π0 / action chunk / RTC&lt;/font&gt;" vertex="1">
+          <mxGeometry height="52" width="1450" x="50" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="legend" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#5B667A;fontFamily=Arial;fontSize=12;spacingLeft=0;" value="图例：蓝色实线 = 实时控制路径；橙色虚线 = HIL episode / replay / policy update 回流；灰色虚线 = 人工干预。" vertex="1">
+          <mxGeometry height="22" width="1450" x="50" y="78" as="geometry" />
+        </mxCell>
+
+        <mxCell id="zone-rlinf" parent="1" style="swimlane;html=1;rounded=1;horizontal=1;startSize=36;fillColor=#F7F8FA;strokeColor=#AAB3C2;fontColor=#202938;fontStyle=1;fontSize=16;align=left;spacingLeft=14;verticalAlign=middle;" value="RLinf：训练与采样编排" vertex="1">
+          <mxGeometry height="590" width="400" x="50" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="zone-zerith" parent="1" style="swimlane;html=1;rounded=1;horizontal=1;startSize=36;fillColor=#FCFBF8;strokeColor=#AAB3C2;fontColor=#202938;fontStyle=1;fontSize=16;align=left;spacingLeft=14;verticalAlign=middle;" value="ZERITH / OpenPI Policy Adapter：π0 真机适配" vertex="1">
+          <mxGeometry height="590" width="500" x="500" y="125" as="geometry" />
+        </mxCell>
+        <mxCell id="zone-h1" parent="1" style="swimlane;html=1;rounded=1;horizontal=1;startSize=36;fillColor=#F7F8FA;strokeColor=#AAB3C2;fontColor=#202938;fontStyle=1;fontSize=16;align=left;spacingLeft=14;verticalAlign=middle;" value="H1 Pro：真机与设备服务" vertex="1">
+          <mxGeometry height="590" width="480" x="1060" y="125" as="geometry" />
+        </mxCell>
+
+        <!-- Real-time path (blue solid). Edges are declared before nodes so they render behind boxes. -->
+        <mxCell id="e-camera-env" edge="1" parent="1" source="camera" target="env" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#2F6FB0;fontColor=#2F6FB0;fontSize=11;labelBackgroundColor=#FFFFFF;labelPosition=center;verticalLabelPosition=bottom;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" value="observation：3 cameras + 23D state">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1030" y="247" />
+              <mxPoint x="1030" y="180" />
+              <mxPoint x="250" y="180" />
+              <mxPoint x="250" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-env-data" edge="1" parent="1" source="env" target="data-config" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#2F6FB0;fontColor=#2F6FB0;fontSize=11;labelBackgroundColor=#FFFFFF;labelPosition=center;verticalLabelPosition=bottom;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="obs + prompt">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-data-pi0" edge="1" parent="1" source="data-config" target="pi0" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#2F6FB0;fontColor=#2F6FB0;fontSize=11;labelBackgroundColor=#FFFFFF;labelPosition=right;verticalLabelPosition=middle;" value="23→32D · norm · H=50">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-pi0-rtc" edge="1" parent="1" source="pi0" target="rtc" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#2F6FB0;fontColor=#2F6FB0;fontSize=11;labelBackgroundColor=#FFFFFF;labelPosition=right;verticalLabelPosition=middle;" value="50-step chunk · execute 10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-rtc-sdk" edge="1" parent="1" source="rtc" target="sdk" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#2F6FB0;fontColor=#2F6FB0;fontSize=11;labelBackgroundColor=#FFFFFF;labelPosition=center;verticalLabelPosition=bottom;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="21D action · chassis 0">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1035" y="594" />
+              <mxPoint x="1035" y="377" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-sdk-h1" edge="1" parent="1" source="sdk" target="h1" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#2F6FB0;fontColor=#2F6FB0;fontSize=11;labelBackgroundColor=#FFFFFF;labelPosition=right;verticalLabelPosition=middle;" value="motor command">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Async HIL return loop (orange dashed). -->
+        <mxCell id="e-h1-env" edge="1" parent="1" source="h1" target="env" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;dashed=1;dashPattern=6 4;strokeWidth=2;strokeColor=#D85F2A;fontColor=#D85F2A;fontSize=10;labelBackgroundColor=#FFFFFF;labelPosition=center;verticalLabelPosition=bottom;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="executed action · reward · success / timeout · intervention flag">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1020" y="542" />
+              <mxPoint x="1020" y="760" />
+              <mxPoint x="35" y="760" />
+              <mxPoint x="35" y="355" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-env-archive" edge="1" parent="1" source="env" target="archive" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;dashed=1;dashPattern=6 4;strokeWidth=2;strokeColor=#D85F2A;fontColor=#D85F2A;fontSize=10;labelBackgroundColor=#FFFFFF;labelPosition=right;verticalLabelPosition=middle;" value="episode">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-archive-learner" edge="1" parent="1" source="archive" target="learner" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;dashed=1;dashPattern=6 4;strokeWidth=2;strokeColor=#D85F2A;fontColor=#D85F2A;fontSize=10;labelBackgroundColor=#FFFFFF;labelPosition=right;verticalLabelPosition=middle;" value="batch">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e-learner-pi0" edge="1" parent="1" source="learner" target="pi0" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;dashed=1;dashPattern=6 4;strokeWidth=2;strokeColor=#D85F2A;fontColor=#D85F2A;fontSize=10;labelBackgroundColor=#FFFFFF;labelPosition=right;verticalLabelPosition=middle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" value="policy update">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="470" y="464" />
+              <mxPoint x="470" y="458" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e-human-env" edge="1" parent="1" source="human" target="env" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;endArrow=block;endFill=1;dashed=1;dashPattern=4 4;strokeWidth=1.5;strokeColor=#7A879B;fontColor=#5B667A;fontSize=10;labelBackgroundColor=#FFFFFF;labelPosition=right;verticalLabelPosition=middle;" value="intervention">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- RLinf nodes. -->
+        <mxCell id="human" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#9AA6B8;dashed=1;dashPattern=5 4;fontColor=#202938;fontSize=14;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Teleop / 人工干预&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;接管 · 纠正 · intervene flag&lt;/font&gt;" vertex="1">
+          <mxGeometry height="68" width="320" x="90" y="195" as="geometry" />
+        </mxCell>
+        <mxCell id="env" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#D85F2A;strokeWidth=2;fontColor=#202938;fontSize=15;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;ZerithRealEnv&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;obs · reward · timeout · intervention · episode&lt;/font&gt;" vertex="1">
+          <mxGeometry height="92" width="320" x="90" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="learner" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF5EF;strokeColor=#D85F2A;strokeWidth=2;fontColor=#202938;fontSize=15;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Actor · Learner · Replay&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;policy update · batch · checkpoint&lt;/font&gt;" vertex="1">
+          <mxGeometry height="88" width="320" x="90" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="archive" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF1F5;strokeColor=#7A879B;fontColor=#202938;fontSize=14;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;LeRobot Archive / Metrics&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;episode replay · evaluation&lt;/font&gt;" vertex="1">
+          <mxGeometry height="88" width="320" x="90" y="420" as="geometry" />
+        </mxCell>
+
+        <!-- Zerith/OpenPI Policy Adapter nodes. -->
+        <mxCell id="data-config" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#53657E;strokeWidth=1.5;fontColor=#202938;fontSize=14;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Zerith/OpenPI DataConfig&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;camera order · 23→32D · normalization&lt;/font&gt;" vertex="1">
+          <mxGeometry height="85" width="400" x="550" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="pi0" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF5EF;strokeColor=#D85F2A;strokeWidth=2;fontColor=#202938;fontSize=15;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;π0 Policy&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;JAX baseline / PyTorch RL · H=50&lt;/font&gt;" vertex="1">
+          <mxGeometry height="95" width="400" x="550" y="410" as="geometry" />
+        </mxCell>
+        <mxCell id="rtc" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#53657E;strokeWidth=1.5;fontColor=#202938;fontSize=14;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;RTC + Safety Adapter&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;50-step chunk · window 10 · chassis 0 · watchdog&lt;/font&gt;" vertex="1">
+          <mxGeometry height="88" width="400" x="550" y="550" as="geometry" />
+        </mxCell>
+
+        <!-- H1 Pro nodes. -->
+        <mxCell id="camera" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#53657E;strokeWidth=1.5;fontColor=#202938;fontSize=14;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;Camera + Robot State&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;cam_high · left_wrist · right_wrist · 23D state&lt;/font&gt;" vertex="1">
+          <mxGeometry height="85" width="400" x="1100" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="sdk" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#53657E;strokeWidth=1.5;fontColor=#202938;fontSize=14;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;H1 SDK / Motor Controller&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;21D command · e-stop · watchdog&lt;/font&gt;" vertex="1">
+          <mxGeometry height="85" width="400" x="1100" y="335" as="geometry" />
+        </mxCell>
+        <mxCell id="h1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF5EF;strokeColor=#D85F2A;strokeWidth=2;fontColor=#202938;fontSize=15;align=center;verticalAlign=middle;spacing=8;" value="&lt;b&gt;H1 Pro 真机&lt;/b&gt;&lt;br&gt;&lt;font color=&quot;#5B667A&quot;&gt;pick-and-place · safety&lt;/font&gt;" vertex="1">
+          <mxGeometry height="88" width="400" x="1100" y="480" as="geometry" />
+        </mxCell>
+
+        <mxCell id="flow-caption" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#5B667A;fontFamily=Arial;fontSize=12;spacingLeft=0;" value="实时控制：Camera/State → ZerithRealEnv → DataConfig → π0 → RTC → H1 SDK → H1 Pro　　异步回流：H1 Pro → ZerithRealEnv → Archive → Learner → π0 Policy" vertex="1">
+          <mxGeometry height="22" width="1450" x="50" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="baseline-caption" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#2F6FB0;fontFamily=Arial;fontSize=12;spacingLeft=0;" value="基线路径：Zerith test_pi0.py 可直接驱动 JAX π0 + RTC；RLinf HIL 路径才通过 ZerithRealEnv 接入同一个 Policy Adapter。" vertex="1">
+          <mxGeometry height="22" width="1450" x="50" y="808" as="geometry" />
+        </mxCell>
+        <mxCell id="ownership-caption" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontColor=#5B667A;fontFamily=Arial;fontSize=12;spacingLeft=0;" value="职责边界：DataConfig / transforms / normalization / π0 / action chunk / RTC 属于 Zerith/OpenPI Policy Adapter；RLinf 通过 ZerithRealEnv 提供 obs、reward、intervention、replay 和 learner。" vertex="1">
+          <mxGeometry height="22" width="1450" x="50" y="836" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
